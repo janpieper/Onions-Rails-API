@@ -26,7 +26,6 @@ Onionstorageapi::Application.routes.draw do
   post '/accounts/new' => 'accounts#newAccountWeb'
   get '/logout' => 'accounts#logout'
   get '/deleteOnion' => 'onions#deleteOnionWeb'
-  get '/reset_sessions' => 'sessions#reset_sessions_table_id'
   get '/about' => 'accounts#about'
   get '/deleteAccount' => 'accounts#deleteAccountWeb'
   post '/deleteAccount' => 'accounts#deleteAccountFinal'

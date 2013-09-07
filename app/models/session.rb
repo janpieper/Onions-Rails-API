@@ -19,6 +19,9 @@ class Session < ActiveRecord::Base
     if @session
       if @session.created_at + 1.hours > Time.now
          return @session.HashedUser
+      else
+         @sessions.destroy_all
+         return nil
       end
     end
 

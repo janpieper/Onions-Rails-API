@@ -1,0 +1,19 @@
+<%= form_tag do %>
+    <div class="login-box">
+      <a href="/"><%= image_tag 'logo.svg', {:width => 80, :height => 80} %></a>
+      <h1>Onions<span class="io">.io</span></h1>
+      <% if params[:BadPassword] %>
+          <p>Username/Password combo does not match!</p>
+      <% end %>
+      <div class="form-container">
+        <div class="form-email">
+          <%= text_field 'account', 'User', {:placeholder => 'Username', :autofocus => "", :class => "w-input", :type => "text"} %>
+        </div>
+        <div class="form-email">
+          <%= text_field 'account', 'Pass', {:placeholder => 'Password', :class => 'w-input', :type => 'password'} %>
+        </div>
+      </div>
+      <%= submit_tag('DELETE ACCOUNT', :class=>'button') %>
+      <p class="subtext">This action cannot be reversed. Make sure that this is something you absolutely want to do before you press that button.</p>
+    </div>
+<% end %>

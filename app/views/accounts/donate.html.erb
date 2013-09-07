@@ -1,0 +1,28 @@
+<div class="about_box">
+  <a href="/"><%= image_tag 'logo.svg', {:width => 80, :height => 80} %></a>
+  <h1>Onions<span class="io">.io</span></h1>
+  <div class="form-container">
+    <div class="about_header_div">
+      <p class="about_header">Donate</p>
+    </div>
+    <div class="about_text_div">
+      <p class="about_text">Onions.io is absolutely free. However, the servers aren't. It would be awesome if you donated to the cause to maintain the zero monetary costs for our end users. Right now, the servers cost about $50/month on <a href="http://heroku.com/" class="about">Heroku</a>, and will probably go up as the user-base increases. Thanks for donating!<br><br><b>Statistics</b><br><br>
+       <b><span class="purple"><%= @total_accounts %></span></b> Accounts<br><br><b><span class="purple"><%= @total_onions %></span></b> Onions created</p>
+      <div class="spacing">
+        <div class="spacingbar"></div>
+      </div>
+      <div class="donate">
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="CBWJMU346GASG">
+          <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+          <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+        <br>
+        <script id='flattrbtn'>(function(i){var f,s=document.getElementById(i);f=document.createElement('iframe');f.src='//api.flattr.com/button/view/?uid=bennyguitar&button=compact&url='+encodeURIComponent(document.URL);f.title='Flattr';f.height=20;f.width=110;f.style.borderWidth=0;s.parentNode.insertBefore(f,s);})('flattrbtn');</script>
+      </div>
+    </div>
+  </div>
+  <div class="main-link"><a href="/new">New Account</a></div>
+  <div class="main-link"><a href="/about">About Onions</a></div>
+</div>

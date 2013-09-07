@@ -1,0 +1,59 @@
+
+<% if !@onions %>
+	<% redirect_to("/") %>
+<% end %>
+<div class="onion-box">
+	<a href="/"><%= image_tag 'logo.svg', {:width => 80, :height => 80} %></a>
+	<h1>Onions<span class="io">.io</span></h1>
+
+	<!-- Logout -->
+	<form accept-charset="UTF-8" action="/logout" method="get">
+		<input class="button" name="commit" type="submit" value="LOGOUT" />
+	</form>
+	<!-- Divider -->
+	<div class="spacing">
+		<div class="spacing-bar"></div>
+	</div>
+
+	<!-- Create A New Onion -->
+	<div class="onion-create">
+		<%= form_tag do %>
+      		<div class="onion">
+      			<div class="onion-container">
+      				<div class="onion-title"><%= text_field "onion", "Title", {"placeholder" => "New Onion Title", "class" => "w-input", "type" => "text", :maxlength => 75} %></div>
+        			<div class="onion-info"><%= text_area "onion", "Info", {"placeholder" => "New Onion Info", "class" => "w-input", "type" => "text", "size" => "30x20", :id => 'onion_area', :value => '', :maxlength => 800} %></div>
+      			</div>
+      			<%= submit_tag("CREATE ONION", :class=>"button") %>
+      			<!-- Divider -->
+				<div class="spacing">
+					<div class="spacing-bar"></div>
+				</div>
+      		</div>
+      	<% end %>
+	</div>
+
+
+	<!-- Show Onions -->
+	<% if @onions %>
+		<% @onions.each do |onion| %>
+  	  		<%= form_tag do %>
+      			<div class="onion">
+      				<div class="onion-container">
+      					<div class="onion-title"><%= text_field "onion", "Title", {"placeholder" => "Title", "class" => "w-input", "type" => "text", "value" => onion.HashedTitle, :maxlength => 75} %></div>
+        				<div class="onion-info"><%= text_area "onion", "Info", {"placeholder" => "Info", "class" => "w-input", "type" => "text", "value" => onion.HashedInfo, "size" => "30x20", :id => 'onion_area', :maxlength => 800} %></div>
+        				<div class="onion-links">
+        					<div class="leftLink"><%= submit_tag("SAVE", :class=>'purple linkbutton') %></div>
+                            <div class="rightLink"><a href=<%= "/deleteOnion?OnionId=" + onion.id.to_s %> class="purple linkbutton">DELETE</a></div>
+        				</div>
+      				</div>
+      				<%= hidden_field_tag "Id", onion.id %>
+      			</div>
+      		<% end %>
+  		<% end %>
+	<% end %>
+
+  <!-- Delete Account -->
+  <div>
+    <a class="white" href="/deleteAccount">Delete your account?</a>
+  </div>
+</div>

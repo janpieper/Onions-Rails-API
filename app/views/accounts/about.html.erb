@@ -1,0 +1,72 @@
+<div class="about_box">
+  <a href="/"><%= image_tag 'logo.svg', {:width => 80, :height => 80} %></a>
+  <h1>Onions<span class="io">.io</span></h1>
+  <div class="form-container">
+    <div class="about_header_div">
+      <p class="about_header">What is Onions?</p>
+    </div>
+    <div class="about_text_div">
+      <p class="about_text">Onions is a way to keep track of any text-based information in an ultra-secure fashion. Things like passwords, debit card information or social security numbers lend themselves perfectly for Onions. Onions isn't a closed box - it's open source. This means you can pore over the code and see just how secure it is as well.</p>
+    </div>
+    <div class="about_header_div">
+      <p class="about_header">Secure?</p>
+    </div>
+    <div class="about_text_div">
+      <p class="about_text">Onions uses a few different methods to keep your data secure. The most modern cryptographic implementations are used not only for data integrity, but also to foster a community response and discussion about what the best methods are, and using them correctly. From the get-go, all connections to and from the server are made using an <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security" class="about">SSL</a> connection. You can verify this by looking in the address bar above for the https prefix, and seeing the certificate by clicking that.<br><br>
+      <b>Account Security</b><br><br>
+      On the server, your password is hashed and salted using <a href="https://en.wikipedia.org/wiki/Bcrypt" class="about">BCrypt</a>, and your plaintext username is never stored next to any information. Your username is hashed and salted using <a href="http://en.wikipedia.org/wiki/SHA-2" class="about">SHA-256</a> before being stored on the server. Here's what some sample account data looks like:<p>
+      <div class="code">
+        <code>
+          <span class="code-comment">// Sample Account data</span><br><br>
+          {<br><br>
+          <span class="code-key">"HashedUser"</span> : "816e1adef0a03d730c13db15842ad7c5
+          b1d724c77c58f32d7bc23871bdee3641"<br><br>
+          <span class="code-key">"HashedPass"</span> : "$2a$10$Vk1O3RLSwK4S7ltKsEgD7uRN
+          JYHU0U9h8wojVIqrWvpFKWw/3S4nm"<br><br>
+          }
+        </code>
+      </div>
+      <p class="about_text"><b>Data Security</b><br><br>
+        <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="about">AES-256</a> encryption is employed to turn your various Onions into gobbledy-gook before they're saved on the server. Your AES key is created from a combination of your plaintext username and password, and a randomly generated salt. If an attacker were to get all of the database information, they wouldn't have this AES Key. It's never saved anywhere on the server and is created at login to encrypt/decrypt your data. Below is some sample encrypted Onion data, as it looks in the database:</p>
+      <div class="code">
+        <code>
+          <span class="code-comment">// Sample Onion data</span><br><br>
+          {<br><br>
+              <span class="code-key">"HashedInfo"</span> : "+80vA2gRPv0Hvnxt545hNA=="<br><br>
+              <span class="code-key">"HashedTitle"</span> : "nQIgB8z5skfyTx5OcrK38w=="<br><br>
+              <span class="code-key">"HashedUser"</span> : "816e1adef0a03d730c13db15842ad7c5
+                b1d724c77c58f32d7bc23871bdee3641"<br><br>
+          }
+        </code>
+      </div>
+      <p class="about_text">
+        Because your email or any other personally identifying information is never stored, it does make password retrieval or resetting impossible. I felt like this was a good trade-off for losing some usability at the sacrifice of anonymity and better security. In essence, don't lose your username or password or forget them - it's the only way to see/save data.
+      </p>
+    </div>
+    <div class="about_header_div">
+      <p class="about_header">Open source?</p>
+    </div>
+    <div class="about_text_div">
+      <p class="about_text">There's only one real way to trust that everything is as secure as I say it is - and that's not by keeping me to my word. You can pore over the code at <a href="https://github.com/onionsapp" class="about">Github</a>. You can read how the app handles encryption and web service calls and see the server backend code. Because it is open source, we would love feedback from the community - especially on methods to increase security and improve functionality. Don't be afraid to open a pull request!</p>
+    </div>
+    <div class="about_header_div">
+      <p class="about_header">But why free?</p>
+    </div>
+    <div class="about_text_div">
+      <p class="about_text">Private information storage in the cloud should be free. We're not storing videos, photos or audio - so storage space isn't a huge problem. However, with that in mind, hosting does cost money, so if you'd like to donate you can do so at <a href="/donate" class="about">www.onions.io/donate</a>. On that page you can see a breakdown on how much it costs to keep Onions online - and any milestones we'd like to hit for the future with new versions.</p>
+    </div>
+    <div class="about_header_div">
+      <p class="about_header">Using Onion Routing?</p>
+    </div>
+    <div class="about_text_div">
+      <p class="about_text">The short answer is: not right now. I love <a href="https://en.wikipedia.org/wiki/Onion_routing" class="about">Onion routing</a>, and recommend everyone use it - especially if you value the security of any and all information you put online. I'm not doing anything special on the backend to route your requests through TOR, just straight to the server. However, I would like to implement similar security features in the future.</p>
+    </div>
+    <div class="about_text_div">
+      <p class="subtext">
+        Onions is © by Benjamin Gordon, 2013 - The code is open source for you to view, edit and fork, but not for commercial purposes.
+      </p>
+    </div>
+  </div>
+  <div class="main-link"><a href="/new">New Account</a></div>
+  <div class="main-link"><a href="/donate">Donate</a></div>
+</div>

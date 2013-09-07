@@ -1,0 +1,88 @@
+// Place all the styles related to the Accounts controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.about_box {
+  position: relative;
+  left: 50%;
+  margin-top: 50px;
+  margin-left: -150px;
+  width: 300px;
+  height: 100%;
+  text-align: center;
+  margin-bottom: 50px;
+}
+p.about_header {
+  font-size: 23px;
+  color: #922d8d;
+}
+
+p.about_text {
+  font-size: 16px;
+  color: #454545;
+}
+
+p.subtext {
+  font-size: 13px;
+  color: #454545;
+}
+
+a.about {
+  font-size: 16px;
+  color: #922d8d;
+}
+
+purple {
+  color: #922d8d;
+}
+
+.spacing {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.spacingbar {
+  width: 100%;
+  height: 1px;
+  background-color: #e5e5e5;
+  opacity: 1.0;
+}
+
+.about_header_div {
+  text-align: left;
+  padding: 5px;
+}
+
+.about_text_div {
+  text-align: left;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+.donate {
+  text-align: center;
+  margin: 10px;
+}
+
+.code {
+  font-size: 12px;
+  padding: 12px;
+  background-color: #f0f0f0;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e0e0e0;
+  text-color: #313131;
+  margin-bottom: 12px;
+}
+
+.code-comment {
+  color: #4da311;
+}
+
+.code-key {
+  color: #922172;
+}

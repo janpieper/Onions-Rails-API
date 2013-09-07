@@ -1,0 +1,108 @@
+// Place all the styles related to the Onions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.onion {
+    width: 300px;
+}
+
+.onion-container {
+	background-color: #ffffff;
+    margin-bottom: 15px;
+    -moz-box-shadow:    0px 2px 2px 0px #000;
+    -webkit-box-shadow: 0px 2px 2px 0px #000;
+    box-shadow:         0px 2px 2px 0px #000;
+    width: 300px;
+}
+
+.onion-title {
+	font-size: 17px;
+	color: #454545;
+}
+
+.onion-links {
+	padding: 10px;
+	font-size: 17px;
+	color: #454545;
+	overflow: auto;
+}
+
+.onion-info {
+	font-size: 17px;
+	color: #757575;
+	border-style: none none solid;
+  	border-width: 0px 0px 1px;
+  	border-color: #ffffff #ffffff #e5e5e5;
+}
+
+.oniontext {
+	font-size: 17px;
+	color: #757575;
+}
+
+.onion-box {
+	position: relative;
+    left: 50%;
+    margin-top: 50px;
+    margin-left: -150px;
+    width: 300px;
+    height: 100%;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.onion-create {
+	text-align: center;
+}
+
+a.purple {
+	font-size: 16px;
+	color: #922d8d;
+}
+
+a.white {
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.leftLink {
+	padding: 0;
+	display: inline-block;
+	float: left;
+}
+
+.rightLink {
+	padding: 0;
+	float: right;
+}
+
+.linkbutton {
+  display: inline-block;
+  padding: 0px;
+  background-color: #ffffff;
+  border: none;
+  font-family: source_sans_proregular, sans-serif;
+  color: #922d8d;
+  font-size: 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.spacing {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.spacing-bar {
+  width: 100%;
+  height: 1px;
+  background-color: #ffffff;
+  opacity: 0.2;
+}
+
+input {
+	padding-bottom: 0px;
+}
+
+
+

@@ -39,3 +39,16 @@ An Onion has a title and info as its properties. The title is just an 80 charact
 + HashedInfo = AES_Encrypt(info, AES_Key)
 + HashedUser = Account.HashedUser
 ```
+
+**Sessions**
+
+The client applications are given Session objects after logging in, allowing them to retrieve, manipulate, create or delete Onions on the server. The Session object contains a Key, HashedUser and CreationDate properties used to guarantee authenticity and allowing the client to make changes. The Key property is a random GUID given at runtime that is matched to an Account that just logged in. The CreationDate is used to maintain an hour timeline on making changes to the server without having to log back in again.
+
+The Session objects also roll after every action. Basically this means that on login you get a Session object - then after you create a new Onion, that Session object is deleted and a new one is given to the client. If you edit an Onion and save it, a new Session object is given to you. If you sit for an hour after logging in, and then try to manipulate the data, the client will log you out and return you to the login screen. The data model for this looks like so:
+
+```ruby
+// Session
++ Key = 32-bit GUID
++ HashedUser = Account.HashedUser
++ CreationDate = DateTime object
+```

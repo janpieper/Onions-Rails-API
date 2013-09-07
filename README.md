@@ -66,4 +66,16 @@ The Session objects also roll after every action. Basically this means that on l
 
 ## License ##
 
-Coming soon
+The Edited MIT License (MIT)
+
+Copyright (c) Benjamin Gordon 2013
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, distribute, copies of the Software, and
+to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+* You cannot sell the software, rebranded as your own
+* You must link back to this repository if any bit of the software you publish.

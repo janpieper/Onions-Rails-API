@@ -52,3 +52,18 @@ The Session objects also roll after every action. Basically this means that on l
 + HashedUser = Account.HashedUser
 + CreationDate = DateTime object
 ```
+
+--------------------
+
+## Coming Soon ##
+
+* iPhone app
+* iPad app
+* Mac OS X app
+* Android app
+
+--------------------
+
+## License ##
+
+Coming soon

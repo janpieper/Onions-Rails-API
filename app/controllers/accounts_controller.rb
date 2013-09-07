@@ -24,7 +24,7 @@ class AccountsController < ApplicationController
 				encrypted_user = Account.hashed_user(login[:User])
 				if (Account.account_exists(encrypted_user))
 					# Account exists for that Email
-					if (Account.pass_is_good_and_verified(login[:Pass],encrypted_user))
+					if (Account.pass_is_good(login[:Pass],encrypted_user))
 						@users = Account.where(:HashedUser => encrypted_user)
 						@user = @users[0]
 						sKey = Session.new_session(encrypted_user)
@@ -58,7 +58,7 @@ class AccountsController < ApplicationController
 			encrypted_user = Account.hashed_user(params[:User])
 			if (Account.account_exists(encrypted_user))
 				# Account exists for that Email
-				if (Account.pass_is_good_and_verified(params[:Pass],encrypted_user))
+				if (Account.pass_is_good(params[:Pass],encrypted_user))
 					salt = Account.where(:HashedUser => encrypted_user)[0].Salt
 					sKey = Session.new_session(encrypted_user)
 					respond_with({:SessionKey => sKey, :Salt => salt}.as_json, :location => nil)
@@ -145,7 +145,7 @@ class AccountsController < ApplicationController
         encrypted_user = Account.hashed_user(login[:User])
         if (Account.account_exists(encrypted_user))
           / Account exists for that Email /
-          if (Account.pass_is_good_and_verified(login[:Pass],encrypted_user))
+          if (Account.pass_is_good(login[:Pass],encrypted_user))
             Account.where(:HashedUser => encrypted_user).destroy_all
             Onion.where(:HashedUser => encrypted_user).destroy_all
             Session.where(:HashedUser => encrypted_user).destroy_all

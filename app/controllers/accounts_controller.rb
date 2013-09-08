@@ -128,34 +128,34 @@ class AccountsController < ApplicationController
   end
 
   def about
-     //
+     #
   end
 
 
   # DELETE ACCOUNT
   def deleteAccountWeb
-    //
+    #
   end
 
   def deleteAccountFinal
     if params[:account]
       login = params[:account]
       if login[:User] && login[:Pass]
-        / Params are GOOD /
+        # Params are Good
         encrypted_user = Account.hashed_user(login[:User])
         if (Account.account_exists(encrypted_user))
-          / Account exists for that Email /
+          # Account exists for that Username
           if (Account.pass_is_good(login[:Pass],encrypted_user))
             Account.where(:HashedUser => encrypted_user).destroy_all
             Onion.where(:HashedUser => encrypted_user).destroy_all
             Session.where(:HashedUser => encrypted_user).destroy_all
             redirect_to('/?Deleted=true')
           else
-            / User&Pass Mismatch /
+            # User&Pass Mismatch
             respond_with({:error => "Unauthorized Access"}.as_json, :location => "/deleteAccount?BadPassword=true")
           end
         else
-          / User&Pass Mismatch /
+          # User&Pass Mismatch
           respond_with({:error => "Unauthorized Access"}.as_json, :location => "/deleteAccount?BadPassword=true")
         end
       end

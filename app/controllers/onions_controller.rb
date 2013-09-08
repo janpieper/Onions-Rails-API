@@ -27,8 +27,8 @@ class OnionsController < ApplicationController
 	def create
 		if params[:onion] && session[:SessionKey] && session[:UserKey]
 			onion = params[:onion]
-			userHash = Session.user_hash_for_session(session[:SessionKey])
-			if userHash
+			@user_hash = Session.user_hash_for_session(session[:SessionKey])
+			if @user_hash
         onionTitle = onion[:Title]
         onionInfo = onion[:Info]
 				eTitle = Onion.aes256_encrypt(session[:UserKey], (onionTitle.length>75 ? onionTitle[0..74] : onionTitle))
@@ -36,18 +36,19 @@ class OnionsController < ApplicationController
 				eInfo = Onion.aes256_encrypt(session[:UserKey], (onionInfo.length>800 ? onionInfo[0..799] : onionInfo))
 				eInfo = Base64.encode64(eInfo)
 				if params[:Id]
-					/ Edit Onion /
-					@o = Onion.find(params[:Id])
-					@o.HashedTitle = eTitle
-					@o.HashedInfo = eInfo
-					@o.save
-				else
-					/ New Onion /
-
-					@o = Onion.create(:HashedUser => userHash, :HashedTitle => eTitle, :HashedInfo => eInfo)
+					# Edit Onion
+					@edit_onion = Onion.find(params[:Id])
+          if @edit_onion.HashedUser == @user_hash
+            @edit_onion.HashedTitle = eTitle
+            @edit_onion.HashedInfo = eInfo
+            @edit_onion.save
+          end
+        else
+          # New Onion
+					@new_onion = Onion.create(:HashedUser => @user_hash, :HashedTitle => eTitle, :HashedInfo => eInfo)
 				end
 				respond_with({:error => "Unauthorized Access"}.as_json, :location => "/onions")
-				session[:SessionKey] = Session.new_session(userHash)
+				session[:SessionKey] = Session.new_session(@user_hash)
 			else
 				respond_with({:error => "Unauthorized Access"}.as_json, :location => "/")
 			end
@@ -97,13 +98,17 @@ class OnionsController < ApplicationController
 			@user_hash = Session.user_hash_for_session(params[:SessionKey])
 			if @user_hash
 				@onion = Onion.find(params[:Id])
-				@onion.HashedTitle = params[:HashedTitle]
-				@onion.HashedInfo = params[:HashedInfo]
-				if @onion.save
-					respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
-				else
-					respond_with({:error => "Onion failed to Save."}.as_json, :location => nil)
-				end
+        if @onion.HashedUser == @user_hash
+          @onion.HashedTitle = params[:HashedTitle]
+          @onion.HashedInfo = params[:HashedInfo]
+          if @onion.save
+            respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+          else
+            respond_with({:error => "Onion failed to Save."}.as_json, :location => nil)
+          end
+        else
+          respond_with({:error => "No User for Session"}.as_json, :location => nil)
+        end
 			else
 				respond_with({:error => "No User for Session"}.as_json, :location => nil)
 			end
@@ -117,8 +122,13 @@ class OnionsController < ApplicationController
 		if params[:SessionKey]
 			@user_hash = Session.user_hash_for_session(params[:SessionKey])
 			if @user_hash
-				@onion = Onion.find(params[:Id]).destroy
-				respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+				@onion = Onion.find(params[:Id])
+        if @onion.HashedUser == @user_hash
+          @onion.destroy
+          respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+        else
+          respond_with({:error => "No User for Session"}.as_json, :location => nil)
+        end
 			else
 				respond_with({:error => "No User for Session"}.as_json, :location => nil)
 			end
@@ -138,13 +148,13 @@ class OnionsController < ApplicationController
 					session[:SessionKey] = Session.new_session(userHash)
 					redirect_to("/onions")
 				else
-					/ No Permission /
+					# No Permission
 				end
 			else
-				/ No Permission /
+        # No Permission
 			end
 		else
-			/ No Permission /
+      # No Permission
 		end
 	end
 

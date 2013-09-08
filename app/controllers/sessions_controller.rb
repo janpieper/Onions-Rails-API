@@ -16,11 +16,5 @@ class SessionsController < ApplicationController
 	def delete
 		respond_with({:error => "Unauthorized Access"}.as_json, :location => nil)
   end
-
-
-  def reset_sessions_table_id
-    s = Session.reset_sessions
-    redirect_to("/sessions.json")
-  end
 	
 end

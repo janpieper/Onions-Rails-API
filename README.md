@@ -50,7 +50,7 @@ The Session objects also roll after every action. Basically this means that on l
 // Session
 + Key = 32-bit GUID
 + HashedUser = Account.HashedUser
-+ CreationDate = DateTime object
++ Created_At = DateTime object
 ```
 
 --------------------

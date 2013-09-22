@@ -86,6 +86,14 @@ h1 {
     padding: 10px;
 }
 
+.error {
+    font-size: 120px;
+    color: #fff;
+    font-family: 'source_sans_proregular', sans-serif;
+    padding: 10px;
+    font-weight: bold;
+}
+
 p {
 	font-size: 22px;
 	color: #fff;

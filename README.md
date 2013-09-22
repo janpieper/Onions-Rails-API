@@ -105,6 +105,93 @@ class Account < ActiveRecord::Base
   end
 end
 ```
+
+```ruby
+// onion.rb
+
+require 'base64'
+require 'openssl'
+
+class Onion < ActiveRecord::Base
+  attr_accessible :HashedInfo, :HashedTitle, :HashedUser
+
+  # Take Onions from DB and decrypt them all after a User logs in
+  def self.decrypted_onions_with_key(onions,key)
+  	if onions && key
+  		onions.each do |o|
+  			title = Base64.decode64(o.HashedTitle)
+  			info = Base64.decode64(o.HashedInfo)
+  			title = Onion.aes256_decrypt(key,title)
+  			info = Onion.aes256_decrypt(key,info)
+  			o.HashedTitle = title
+  			o.HashedInfo = info
+  		end
+  	end
+
+  	return onions
+  end
+
+  # Encrypt an Onion
+  def self.aes256_encrypt(key, data)
+	key = Digest::SHA256.digest(key) if(key.kind_of?(String) && 32 != key.bytesize)
+	aes = OpenSSL::Cipher.new('AES-256-CBC')
+	aes.encrypt
+	aes.key = key
+	aes.update(data) + aes.final
+  end
+
+  # Decrypt an Onion
+  def self.aes256_decrypt(key, data)
+	key = Digest::SHA256.digest(key) if(key.kind_of?(String) && 32 != key.bytesize)
+	aes = OpenSSL::Cipher.new('AES-256-CBC')
+	aes.decrypt
+	aes.key = key
+	aes.update(data) + aes.final
+  end
+
+end
+```
+
+```ruby
+// session.rb
+
+require 'securerandom'
+
+class Session < ActiveRecord::Base
+  attr_accessible :HashedUser, :Key
+
+  def self.new_session(user_hash)
+  	session_key = SecureRandom.uuid
+  	Session.where(:HashedUser => user_hash).destroy_all
+  	s = Session.create(:HashedUser => user_hash, :Key => session_key.to_s)
+    if s.id > 2000000000
+      Session.reset_sessions
+    end
+  	return session_key.to_s
+  end
+
+  def self.user_hash_for_session(session_key)
+  	@sessions = Session.where(:Key => session_key)
+  	@session = @sessions[0]
+    if @session
+      if @session.created_at + 1.hours > Time.now
+         return @session.HashedUser
+      else
+         @sessions.destroy_all
+         return nil
+      end
+    end
+
+    return nil
+  end
+
+  def self.reset_sessions
+    # Reset Sessions table if Primary Key goes over 2 billion
+    s = Session.find_by_sql('ALTER SEQUENCE sessions_id_seq RESTART WITH 1')
+  end
+
+end
+```
 --------------------
 
 ## Coming Soon ##
@@ -129,5 +216,5 @@ use, copy, modify, merge, distribute, copies of the Software, and
 to permit persons to whom the Software is furnished to do so,
 subject to the following conditions:
 
-* You cannot sell the software, rebranded as your own
-* You must link back to this repository if any bit of the software you publish.
+* You cannot sell the software, rebranded as your own or in its current form.
+* You must link back to this repository if you use any bit of the propietary parts of this software.

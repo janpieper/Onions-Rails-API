@@ -1,6 +1,6 @@
 # config/puma.rb
 environment ENV['RACK_ENV']
-threads 0,16
+threads 0,12
 
 workers 3
 preload_app!

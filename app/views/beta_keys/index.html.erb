@@ -1,0 +1,20 @@
+<div class="about_box">
+  <a href="/"><%= image_tag 'logo.svg', {:width => 80, :height => 80} %></a>
+  <h1>Onions<span class="io">.io</span></h1>
+  <div class="form-container">
+    <div class="about_header_div">
+      <p class="about_header">Beta Keys</p>
+    </div>
+    <div class="about_text_div">
+      <p class="about_text" style="font-size:12px;">
+        <% if @keys %>
+            <% @keys.each do |k| %>
+                <%= k.Code %><br>
+            <% end %>
+        <% else %>
+            Unauthorized Access. Please never try that again.
+        <% end %>
+      </p>
+    </div>
+  </div>
+</div>

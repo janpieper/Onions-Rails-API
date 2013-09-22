@@ -1,8 +1,10 @@
+require 'base64'
+require 'openssl'
+
 class Onion < ActiveRecord::Base
-  require 'base64'
-  require 'openssl'
   attr_accessible :HashedInfo, :HashedTitle, :HashedUser
 
+  # Take Onions from DB and decrypt them all after a User logs in
   def self.decrypted_onions_with_key(onions,key)
   	if onions && key
   		onions.each do |o|
@@ -18,6 +20,7 @@ class Onion < ActiveRecord::Base
   	return onions
   end
 
+  # Encrypt an Onion
   def self.aes256_encrypt(key, data)
 	key = Digest::SHA256.digest(key) if(key.kind_of?(String) && 32 != key.bytesize)
 	aes = OpenSSL::Cipher.new('AES-256-CBC')
@@ -26,6 +29,7 @@ class Onion < ActiveRecord::Base
 	aes.update(data) + aes.final
   end
 
+  # Decrypt an Onion
   def self.aes256_decrypt(key, data)
 	key = Digest::SHA256.digest(key) if(key.kind_of?(String) && 32 != key.bytesize)
 	aes = OpenSSL::Cipher.new('AES-256-CBC')

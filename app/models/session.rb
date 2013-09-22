@@ -29,6 +29,7 @@ class Session < ActiveRecord::Base
   end
 
   def self.reset_sessions
+    # Reset Sessions table if Primary Key goes over 2 billion
     s = Session.find_by_sql('ALTER SEQUENCE sessions_id_seq RESTART WITH 1')
   end
 

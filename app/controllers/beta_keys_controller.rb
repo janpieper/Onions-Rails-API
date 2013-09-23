@@ -1,3 +1,5 @@
+require 'openssl'
+
 class BetaKeysController < ApplicationController
   respond_to :json, :html
 

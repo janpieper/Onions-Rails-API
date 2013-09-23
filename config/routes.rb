@@ -1,4 +1,7 @@
 Onionstorageapi::Application.routes.draw do
+  resources :beta_keys
+
+
   resources :verifications
 
 

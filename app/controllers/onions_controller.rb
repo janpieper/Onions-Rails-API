@@ -31,21 +31,13 @@ class OnionsController < ApplicationController
 			if @user_hash
         onionTitle = onion[:Title]
         onionInfo = onion[:Info]
-				eTitle = Onion.aes256_encrypt(session[:UserKey], (onionTitle.length>75 ? onionTitle[0..74] : onionTitle))
-				eTitle = Base64.encode64(eTitle)
-				eInfo = Onion.aes256_encrypt(session[:UserKey], (onionInfo.length>800 ? onionInfo[0..799] : onionInfo))
-				eInfo = Base64.encode64(eInfo)
 				if params[:Id]
 					# Edit Onion
 					@edit_onion = Onion.find(params[:Id])
-          if @edit_onion.HashedUser == @user_hash
-            @edit_onion.HashedTitle = eTitle
-            @edit_onion.HashedInfo = eInfo
-            @edit_onion.save
-          end
+          @edit_onion.edit_onion_with_new_data(session[:UserKey], (onionTitle.length>75 ? onionTitle[0..74] : onionTitle), (onionInfo.length>800 ? onionInfo[0..799] : onionInfo)) if @edit_onion.HashedUser == @user_hash
         else
           # New Onion
-					@new_onion = Onion.create(:HashedUser => @user_hash, :HashedTitle => eTitle, :HashedInfo => eInfo)
+					@new_onion = Onion.create_new_onion(session[:UserKey], (onionTitle.length>75 ? onionTitle[0..74] : onionTitle), (onionInfo.length>800 ? onionInfo[0..799] : onionInfo), @user_hash)
 				end
 				respond_with({:error => "Unauthorized Access"}.as_json, :location => "/onions")
 				session[:SessionKey] = Session.new_session(@user_hash)

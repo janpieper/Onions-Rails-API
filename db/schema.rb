@@ -11,34 +11,34 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130814012211) do
+ActiveRecord::Schema.define(:version => 20130923003811) do
 
   create_table "accounts", :force => true do |t|
-    t.string   "HashedUser"
-    t.string   "HashedPass"
-    t.string   "Salt"
+    t.string "HashedUser"
+    t.string "HashedPass"
+    t.string "Salt"
+  end
+
+  create_table "beta_keys", :force => true do |t|
+    t.string   "Code"
+    t.boolean  "Active"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   create_table "onions", :force => true do |t|
-    t.string   "HashedUser"
-    t.string   "HashedTitle"
-    t.text     "HashedInfo"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.string "HashedUser"
+    t.string "HashedTitle"
+    t.text   "HashedInfo"
+    t.string "Title_Iv"
+    t.string "Info_Iv"
+    t.string "Title_AuthTag"
+    t.string "Info_AuthTag"
   end
 
   create_table "sessions", :force => true do |t|
     t.string   "Key"
     t.string   "HashedUser"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "verifications", :force => true do |t|
-    t.string   "Email"
-    t.string   "Pin"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

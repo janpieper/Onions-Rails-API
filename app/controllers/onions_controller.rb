@@ -112,7 +112,7 @@ class OnionsController < ApplicationController
 	end
 
 
-	def delete_onion
+	def deleteOnion
 		if params[:SessionKey]
 			@user_hash = Session.user_hash_for_session(params[:SessionKey])
 			if @user_hash

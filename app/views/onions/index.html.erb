@@ -6,7 +6,7 @@
 	<a href="/"><%= image_tag 'logo.svg', {:width => 80, :height => 80} %></a>
 	<h1>Onions<span class="io">.io</span></h1>
     <% if @beta_problems %>
-      <p style="font-size:13px">A security flaw was fixed with the cipher mode for encryption/decryption. Unfortunately this means the previous data you saved can no longer be used - sorry for the inconvenience, things are better/safer now. Thanks for using the Beta!</p>
+      <p style="font-size:13px">A security flaw was fixed with the cipher mode for encryption/decryption. Unfortunately this means the previous data you saved can no longer be used - sorry for the inconvenience, things are better/safer now. None of your information was compromised, we just moved to a better security implementation. We do recommend, however, deleting the old data. Thanks for using the Beta!</p>
     <% end %>
 	<!-- Logout -->
 	<form accept-charset="UTF-8" action="/logout" method="get">

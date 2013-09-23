@@ -57,7 +57,7 @@ class OnionsController < ApplicationController
 	end
 
 
-	def getAllOnions
+	def get_all_onions
 		if params[:SessionKey]
 			@user_hash = Session.user_hash_for_session(params[:SessionKey])
 			if @user_hash
@@ -72,7 +72,7 @@ class OnionsController < ApplicationController
 	end
 
 
-	def addOnion
+	def add_onion
 		if params[:SessionKey]
 			@user_hash = Session.user_hash_for_session(params[:SessionKey])
 			if @user_hash
@@ -87,7 +87,7 @@ class OnionsController < ApplicationController
 	end
 
 
-	def editOnion
+	def edit_onion
 		if params[:SessionKey]
 			@user_hash = Session.user_hash_for_session(params[:SessionKey])
 			if @user_hash
@@ -132,7 +132,7 @@ class OnionsController < ApplicationController
 	end
 
 
-	def deleteOnionWeb
+	def delete_onion_web
 		if session[:SessionKey]
 			userHash = Session.user_hash_for_session(session[:SessionKey])
 			if userHash && params[:OnionId]

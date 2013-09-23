@@ -96,7 +96,7 @@ class AccountsController < ApplicationController
 
 
 	# NEW ACCOUNT WEB
-	def newAccountWeb
+	def new_account_web
 		if params[:register]
 			register = params[:register]
 			if register[:User] && register[:Pass] && register[:BetaCode]
@@ -138,11 +138,11 @@ class AccountsController < ApplicationController
 
 
   # DELETE ACCOUNT
-  def deleteAccountWeb
+  def delete_account_web
     #
   end
 
-  def deleteAccountFinal
+  def delete_account_final
     if params[:account]
       login = params[:account]
       if login[:User] && login[:Pass]

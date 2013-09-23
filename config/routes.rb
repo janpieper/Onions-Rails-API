@@ -17,21 +17,21 @@ Onionstorageapi::Application.routes.draw do
   resources :accounts
 
   / API /
-  post '/api/getAllOnions' => 'onions#getAllOnions'
-  post '/api/addOnion' => 'onions#addOnion'
-  post '/api/editOnion' => 'onions#editOnion'
-  post '/api/deleteOnion' => 'onions#deleteOnion'
+  post '/api/get_all_onions' => 'onions#get_all_onions'
+  post '/api/add_onion' => 'onions#add_onion'
+  post '/api/edit_onion' => 'onions#edit_onion'
+  post '/api/deleteOnion' => 'onions#delete_onion'
   post '/api/login' => 'accounts#login'
   post '/api/newAccount' => 'accounts#new_account'
 
   / Web /
   get '/new' => 'accounts#new'
-  post '/accounts/new' => 'accounts#newAccountWeb'
+  post '/accounts/new' => 'accounts#new_account_web'
   get '/logout' => 'accounts#logout'
-  get '/deleteOnion' => 'onions#deleteOnionWeb'
+  get '/deleteOnion' => 'onions#delete_onion_web'
   get '/about' => 'accounts#about'
-  get '/deleteAccount' => 'accounts#deleteAccountWeb'
-  post '/deleteAccount' => 'accounts#deleteAccountFinal'
+  get '/deleteAccount' => 'accounts#delete_account_web'
+  post '/deleteAccount' => 'accounts#delete_account_final'
   get '/donate' => 'accounts#donate'
 
   # The priority is based upon order of creation:

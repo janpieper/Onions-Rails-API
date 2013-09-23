@@ -54,16 +54,43 @@ class OnionsController < ApplicationController
 
 	def delete
 		respond_with({:error => "Unauthorized Access"}.as_json, :location => nil)
-	end
+  end
 
 
+  def delete_onion_web
+    if session[:SessionKey]
+      userHash = Session.user_hash_for_session(session[:SessionKey])
+      if userHash && params[:OnionId]
+        @onion = Onion.find(params[:OnionId])
+        if @onion.HashedUser == userHash
+          @onion.destroy
+          session[:SessionKey] = Session.new_session(userHash)
+          redirect_to("/onions")
+        else
+          # No Permission
+        end
+      else
+        # No Permission
+      end
+    else
+      # No Permission
+    end
+  end
+
+
+  ################################
+  # Onions.io API ################
+  ################################
+
+  # Gets Onions for a SessionKey
 	def get_all_onions
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
-      if params[:SessionKey]
+      if params[:SessionKey] && params[:AESKey]
         @user_hash = Session.user_hash_for_session(params[:SessionKey])
         if @user_hash
           @onions = Onion.where(:HashedUser => @user_hash)
-          respond_with({:Onions => @onions, :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+          @decrypted_onions = Onion.decrypted_onions_with_key(@onions,params[:AESKey])
+          respond_with({:Onions => @decrypted_onions[:Onions], :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
         else
           respond_with({:error => "No User for Session"}.as_json, :location => nil)
         end
@@ -76,36 +103,37 @@ class OnionsController < ApplicationController
 	end
 
 
+  # Adds Onion to an account when the Session Key is valid
 	def add_onion
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
-      if params[:SessionKey]
+      if params[:SessionKey] && params[:AESKey]
         @user_hash = Session.user_hash_for_session(params[:SessionKey])
         if @user_hash
-          @onion = Onion.create(:HashedUser => @user_hash, :HashedTitle => params[:HashedTitle], :HashedInfo => params[:HashedInfo])
-          respond_with({:NewOnion => @onion, :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+          @onion = Onion.create_new_onion(params[:AESKey],params[:Title],params[:Info],@user_hash)
+          respond_with({:NewOnion => {:id => @onion.id, :HashedTitle => params[:Title], :HashedInfo => params[:Info]}, :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
         else
-          respond_with({:error => "No User for Session"}.as_json, :location => nil)
+          respond_with({:error => 'No User for Session'}.as_json, :location => nil)
         end
       else
-        respond_with({:error => "No Session Key"}.as_json, :location => nil)
+        respond_with({:error => 'No Session Key'}.as_json, :location => nil)
       end
     else
-      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+      respond_with({:error => 'Invalid API Key'}.as_json, :location => nil)
     end
 	end
 
 
+  # Edits an Onion when the SessionKey is valid, and the Onion
+  # in question actually belongs to that user.
 	def edit_onion
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
-      if params[:SessionKey]
+      if params[:SessionKey] && params[:AESKey]
         @user_hash = Session.user_hash_for_session(params[:SessionKey])
         if @user_hash
           @onion = Onion.find(params[:Id])
           if @onion.HashedUser == @user_hash
-            @onion.HashedTitle = params[:HashedTitle]
-            @onion.HashedInfo = params[:HashedInfo]
-            if @onion.save
-              respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+            if @onion.edit_onion_with_new_data(params[:AESKey],params[:Title],params[:Info])
+              respond_with({:Status => 'Success', :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
             else
               respond_with({:error => "Onion failed to Save."}.as_json, :location => nil)
             end
@@ -124,6 +152,8 @@ class OnionsController < ApplicationController
 	end
 
 
+  # Deletes an Onion when the SessionKey is valid and
+  # the Onion in question belongs to that user
 	def delete_onion
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
       if params[:SessionKey]
@@ -146,27 +176,5 @@ class OnionsController < ApplicationController
       respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
     end
   end
-
-
-
-	def delete_onion_web
-		if session[:SessionKey]
-			userHash = Session.user_hash_for_session(session[:SessionKey])
-			if userHash && params[:OnionId]
-				@onion = Onion.find(params[:OnionId])
-				if @onion.HashedUser == userHash
-					@onion.destroy
-					session[:SessionKey] = Session.new_session(userHash)
-					redirect_to("/onions")
-				else
-					# No Permission
-				end
-			else
-        # No Permission
-			end
-		else
-      # No Permission
-		end
-	end
 
 end

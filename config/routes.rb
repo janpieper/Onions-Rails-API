@@ -19,15 +19,15 @@ Onionstorageapi::Application.routes.draw do
 
   resources :accounts
 
-  / API /
+  # API
   post '/api/get_all_onions' => 'onions#get_all_onions'
   post '/api/add_onion' => 'onions#add_onion'
   post '/api/edit_onion' => 'onions#edit_onion'
-  post '/api/deleteOnion' => 'onions#delete_onion'
+  post '/api/delete_onion' => 'onions#delete_onion'
   post '/api/login' => 'accounts#login'
-  post '/api/newAccount' => 'accounts#new_account'
+  post '/api/new_account' => 'accounts#new_account'
 
-  / Web /
+  # Web
   get '/new' => 'accounts#new'
   post '/accounts/new' => 'accounts#new_account_web'
   get '/logout' => 'accounts#logout'

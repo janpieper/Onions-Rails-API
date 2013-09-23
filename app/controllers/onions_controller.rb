@@ -8,7 +8,9 @@ class OnionsController < ApplicationController
 			user_hash = Session.user_hash_for_session(session[:SessionKey])
 			if user_hash
 				@onions = Onion.where(:HashedUser => Session.user_hash_for_session(session[:SessionKey])).order("id")
-				@onions = Onion.decrypted_onions_with_key(@onions,session[:UserKey])
+        @onionhash = Onion.decrypted_onions_with_key(@onions,session[:UserKey])
+				@onions = @onionhash[:Onions]
+        @beta_problems = @onionhash[:BetaProblems]
 				respond_with({:error => "Unauthorized Access"}.as_json, :location => "/")
 			else
 				redirect_to("/")

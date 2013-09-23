@@ -7,12 +7,16 @@ class Onion < ActiveRecord::Base
   # Take Onions from DB and decrypt them all after a User logs in
   def self.decrypted_onions_with_key(onions,key)
   	if onions && key
+      betaProblems = false
   		onions.each do |o|
-  			o.decrypted_onion(key)
+        hash = Onion.decrypted_onion(key, o)
+  			if hash[:BetaProblems]
+          betaProblems = true
+        end
   		end
   	end
 
-  	return onions
+  	return {:Onions => onions, :BetaProblems => betaProblems}
   end
 
   # Encrypt data
@@ -36,10 +40,10 @@ class Onion < ActiveRecord::Base
       aes.decrypt
       aes.key = key
       aes.iv = iv
-      aes.update(data) + aes.final
+      return {:Data => aes.update(data) + aes.final, :BetaProblems => false}
     else
       # Message didn't authenticate
-      return data
+      return {:Data => data, :BetaProblems => true}
     end
   end
 
@@ -61,9 +65,13 @@ class Onion < ActiveRecord::Base
     self.save
   end
 
-  def decrypted_onion(key)
-    self.HashedTitle = Onion.aes256_decrypt(key,Base64.decode64(self.HashedTitle),Base64.decode64(self.Title_Iv),Base64.decode64(self.Title_AuthTag))
-    self.HashedInfo = Onion.aes256_decrypt(key,Base64.decode64(self.HashedInfo),Base64.decode64(self.Info_Iv),Base64.decode64(self.Info_AuthTag))
+  def self.decrypted_onion(key,onion)
+    hashedTitle = Onion.aes256_decrypt(key,Base64.decode64(onion.HashedTitle),Base64.decode64(onion.Title_Iv),Base64.decode64(onion.Title_AuthTag))
+    hashedInfo = Onion.aes256_decrypt(key,Base64.decode64(onion.HashedInfo),Base64.decode64(onion.Info_Iv),Base64.decode64(onion.Info_AuthTag))
+    onion.HashedTitle = hashedTitle[:Data]
+    onion.HashedInfo = hashedInfo[:Data]
+    betaProblems = hashedTitle[:BetaProblems] || hashedInfo[:BetaProblems]
+    return {:BetaProblems => betaProblems}
   end
 
 end

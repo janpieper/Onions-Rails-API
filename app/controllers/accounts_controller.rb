@@ -53,45 +53,53 @@ class AccountsController < ApplicationController
 
 	# Login 
 	def login
-		if params[:User] && params[:Pass]
-			# Params are GOOD
-			encrypted_user = Account.hashed_user(params[:User])
-			if (Account.account_exists(encrypted_user))
-				# Account exists for that Email
-				if (Account.pass_is_good(params[:Pass],encrypted_user))
-					salt = Account.where(:HashedUser => encrypted_user)[0].Salt
-					sKey = Session.new_session(encrypted_user)
-					respond_with({:SessionKey => sKey, :Salt => salt}.as_json, :location => nil)
-				else
-					respond_with({:error => "Email/Password Mismatch"}.as_json, :location => nil)
-				end
-			else
-				respond_with({:error => "Email/Password Mismatch"}.as_json, :location => nil)
-			end
-		else
-			respond_with({:error => "Unauthorized Access"}.as_json, :location => nil)
-		end
+    if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      if params[:User] && params[:Pass]
+        # Params are GOOD
+        encrypted_user = Account.hashed_user(params[:User])
+        if (Account.account_exists(encrypted_user))
+          # Account exists for that Email
+          if (Account.pass_is_good(params[:Pass],encrypted_user))
+            salt = Account.where(:HashedUser => encrypted_user)[0].Salt
+            sKey = Session.new_session(encrypted_user)
+            respond_with({:SessionKey => sKey, :Salt => salt}.as_json, :location => nil)
+          else
+            respond_with({:error => "Email/Password Mismatch"}.as_json, :location => nil)
+          end
+        else
+          respond_with({:error => "Email/Password Mismatch"}.as_json, :location => nil)
+        end
+      else
+        respond_with({:error => "Unauthorized Access"}.as_json, :location => nil)
+      end
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+    end
 	end
 
 
 	# NEW ACCOUNT API
 	def new_account
-		if (params[:User] && params[:Pass])
-			# No Account exists, make one
-			encrypted_user = Account.hashed_user(params[:User])
-			if Account.account_exists(encrypted_user)
-				respond_with({:error => "Account already exists"}.as_json, :location => "/")
-			else
-				hashedPass = Account.new_hashed_pass(params[:Pass])
-				salt = Account.generate_salt
-				sKey = Session.new_session(encrypted_user)
-				@account = Account.create(:HashedUser => encrypted_user, :HashedPass => hashedPass, :Salt => salt)
-				respond_with({:SessionKey => sKey, :Salt => salt}.as_json, :location => "/")
-			end
-		else
-			# Params are BAD
-			respond_with({:error => "Unauthorized Access"}.as_json, :location => "/")
-		end
+    if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      if (params[:User] && params[:Pass])
+        # No Account exists, make one
+        encrypted_user = Account.hashed_user(params[:User])
+        if Account.account_exists(encrypted_user)
+          respond_with({:error => "Account already exists"}.as_json, :location => "/")
+        else
+          hashedPass = Account.new_hashed_pass(params[:Pass])
+          salt = Account.generate_salt
+          sKey = Session.new_session(encrypted_user)
+          @account = Account.create(:HashedUser => encrypted_user, :HashedPass => hashedPass, :Salt => salt)
+          respond_with({:SessionKey => sKey, :Salt => salt}.as_json, :location => "/")
+        end
+      else
+        # Params are BAD
+        respond_with({:error => "Unauthorized Access"}.as_json, :location => "/")
+      end
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+    end
 	end
 
 

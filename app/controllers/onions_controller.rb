@@ -58,78 +58,95 @@ class OnionsController < ApplicationController
 
 
 	def get_all_onions
-		if params[:SessionKey]
-			@user_hash = Session.user_hash_for_session(params[:SessionKey])
-			if @user_hash
-				@onions = Onion.where(:HashedUser => @user_hash)
-				respond_with({:Onions => @onions, :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
-			else
-				respond_with({:error => "No User for Session"}.as_json, :location => nil)
-			end
-		else
-			respond_with({:error => "No Session Key"}.as_json, :location => nil)
-		end
+    if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      if params[:SessionKey]
+        @user_hash = Session.user_hash_for_session(params[:SessionKey])
+        if @user_hash
+          @onions = Onion.where(:HashedUser => @user_hash)
+          respond_with({:Onions => @onions, :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+        else
+          respond_with({:error => "No User for Session"}.as_json, :location => nil)
+        end
+      else
+        respond_with({:error => "No Session Key"}.as_json, :location => nil)
+      end
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+    end
 	end
 
 
 	def add_onion
-		if params[:SessionKey]
-			@user_hash = Session.user_hash_for_session(params[:SessionKey])
-			if @user_hash
-				@onion = Onion.create(:HashedUser => @user_hash, :HashedTitle => params[:HashedTitle], :HashedInfo => params[:HashedInfo])
-				respond_with({:NewOnion => @onion, :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
-			else
-				respond_with({:error => "No User for Session"}.as_json, :location => nil)
-			end
-		else
-			respond_with({:error => "No Session Key"}.as_json, :location => nil)
-		end
+    if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      if params[:SessionKey]
+        @user_hash = Session.user_hash_for_session(params[:SessionKey])
+        if @user_hash
+          @onion = Onion.create(:HashedUser => @user_hash, :HashedTitle => params[:HashedTitle], :HashedInfo => params[:HashedInfo])
+          respond_with({:NewOnion => @onion, :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+        else
+          respond_with({:error => "No User for Session"}.as_json, :location => nil)
+        end
+      else
+        respond_with({:error => "No Session Key"}.as_json, :location => nil)
+      end
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+    end
 	end
 
 
 	def edit_onion
-		if params[:SessionKey]
-			@user_hash = Session.user_hash_for_session(params[:SessionKey])
-			if @user_hash
-				@onion = Onion.find(params[:Id])
-        if @onion.HashedUser == @user_hash
-          @onion.HashedTitle = params[:HashedTitle]
-          @onion.HashedInfo = params[:HashedInfo]
-          if @onion.save
-            respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+    if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      if params[:SessionKey]
+        @user_hash = Session.user_hash_for_session(params[:SessionKey])
+        if @user_hash
+          @onion = Onion.find(params[:Id])
+          if @onion.HashedUser == @user_hash
+            @onion.HashedTitle = params[:HashedTitle]
+            @onion.HashedInfo = params[:HashedInfo]
+            if @onion.save
+              respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+            else
+              respond_with({:error => "Onion failed to Save."}.as_json, :location => nil)
+            end
           else
-            respond_with({:error => "Onion failed to Save."}.as_json, :location => nil)
+            respond_with({:error => "No User for Session"}.as_json, :location => nil)
           end
         else
           respond_with({:error => "No User for Session"}.as_json, :location => nil)
         end
-			else
-				respond_with({:error => "No User for Session"}.as_json, :location => nil)
-			end
-		else
-			respond_with({:error => "No Session Key"}.as_json, :location => nil)
-		end
+      else
+        respond_with({:error => "No Session Key"}.as_json, :location => nil)
+      end
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+    end
 	end
 
 
-	def deleteOnion
-		if params[:SessionKey]
-			@user_hash = Session.user_hash_for_session(params[:SessionKey])
-			if @user_hash
-				@onion = Onion.find(params[:Id])
-        if @onion.HashedUser == @user_hash
-          @onion.destroy
-          respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+	def delete_onion
+    if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      if params[:SessionKey]
+        @user_hash = Session.user_hash_for_session(params[:SessionKey])
+        if @user_hash
+          @onion = Onion.find(params[:Id])
+          if @onion.HashedUser == @user_hash
+            @onion.destroy
+            respond_with({:Status => "Success", :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+          else
+            respond_with({:error => "No User for Session"}.as_json, :location => nil)
+          end
         else
           respond_with({:error => "No User for Session"}.as_json, :location => nil)
         end
-			else
-				respond_with({:error => "No User for Session"}.as_json, :location => nil)
-			end
-		else
-			respond_with({:error => "No Session Key"}.as_json, :location => nil)
-		end
-	end
+      else
+        respond_with({:error => "No Session Key"}.as_json, :location => nil)
+      end
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+    end
+  end
+
 
 
 	def delete_onion_web

@@ -53,7 +53,7 @@ class AccountsController < ApplicationController
 
 
 	# Login 
-	def login
+	def login_api
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
       if params[:User] && params[:Pass]
         # Params are GOOD
@@ -80,7 +80,7 @@ class AccountsController < ApplicationController
 
 
 	# NEW ACCOUNT API
-	def new_account
+	def new_account_api
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
       if params[:User] && params[:Pass]
         # No Account exists, make one
@@ -135,7 +135,7 @@ class AccountsController < ApplicationController
 
 
 	# LOGOUT
-	def logout
+	def logout_web
     Session.where(:Key => session[:SessionKey]).destroy_all
     session[:UserKey] = nil
 		session[:SessionKey] = nil

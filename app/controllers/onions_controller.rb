@@ -83,7 +83,7 @@ class OnionsController < ApplicationController
   ################################
 
   # Gets Onions for a SessionKey
-	def get_all_onions
+	def get_all_onions_api
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
       if params[:SessionKey] && params[:AESKey]
         @user_hash = Session.user_hash_for_session(params[:SessionKey])
@@ -104,7 +104,7 @@ class OnionsController < ApplicationController
 
 
   # Adds Onion to an account when the Session Key is valid
-	def add_onion
+	def add_onion_api
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
       if params[:SessionKey] && params[:AESKey]
         @user_hash = Session.user_hash_for_session(params[:SessionKey])
@@ -125,7 +125,7 @@ class OnionsController < ApplicationController
 
   # Edits an Onion when the SessionKey is valid, and the Onion
   # in question actually belongs to that user.
-	def edit_onion
+	def edit_onion_api
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
       if params[:SessionKey] && params[:AESKey]
         @user_hash = Session.user_hash_for_session(params[:SessionKey])
@@ -154,7 +154,7 @@ class OnionsController < ApplicationController
 
   # Deletes an Onion when the SessionKey is valid and
   # the Onion in question belongs to that user
-	def delete_onion
+	def delete_onion_api
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
       if params[:SessionKey]
         @user_hash = Session.user_hash_for_session(params[:SessionKey])

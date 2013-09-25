@@ -5,6 +5,7 @@ class AccountsController < ApplicationController
 
 	def index
 		if session[:SessionKey]
+      Session.where(:Key => session[:SessionKey]).destroy_all
 			session[:SessionKey] = nil
 		end
 		if session[:UserKey]
@@ -31,7 +32,7 @@ class AccountsController < ApplicationController
 						aesKey = Account.aes_key(login[:User],login[:Pass],@user.Salt)
 						session[:SessionKey] = sKey
 						session[:UserKey] = aesKey
-						respond_with({:SessionKey => sKey}.as_json, :location => "/onions")
+						respond_with({:error => "Unauthorized Access"}.as_json, :location => "/onions")
 					else
 						# User&Pass Mismatch
 						respond_with({:error => "Unauthorized Access"}.as_json, :location => "/?BadPassword=true")
@@ -81,7 +82,7 @@ class AccountsController < ApplicationController
 	# NEW ACCOUNT API
 	def new_account
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
-      if (params[:User] && params[:Pass])
+      if params[:User] && params[:Pass]
         # No Account exists, make one
         encrypted_user = Account.hashed_user(params[:User])
         if Account.account_exists(encrypted_user)
@@ -111,7 +112,7 @@ class AccountsController < ApplicationController
 				if BetaKey.beta_key_is_active(register[:BetaCode])
           encrypted_user = Account.hashed_user(register[:User])
           if Account.account_exists(encrypted_user)
-            respond_with({:error => "Account already exists"}.as_json, :location => "/new?AccountExists=true")
+            respond_with({:error => "Unauthorized Access"}.as_json, :location => "/new?AccountExists=true")
           else
             hashedPass = Account.new_hashed_pass(register[:Pass])
             salt = Account.generate_salt
@@ -119,7 +120,7 @@ class AccountsController < ApplicationController
             session[:SessionKey] = Session.new_session(encrypted_user)
             session[:UserKey] = Account.aes_key(register[:User],register[:Pass],salt)
             BetaKey.use_beta_key(register[:BetaCode])
-            respond_with({:NewAccount => "Success"}.as_json, :location => "/onions")
+            respond_with({:error => "Unauthorized Access"}.as_json, :location => "/onions")
           end
         else
           respond_with({:error => "Unauthorized Access"}.as_json, :location => "/new?BadBetaCode=true")
@@ -135,9 +136,18 @@ class AccountsController < ApplicationController
 
 	# LOGOUT
 	def logout
-		session[:UserKey] = nil
+    Session.where(:Key => session[:SessionKey]).destroy_all
+    session[:UserKey] = nil
 		session[:SessionKey] = nil
 		redirect_to("/")
+  end
+
+
+  # LOGOUT API
+  def logout_api
+    if params[:SessionKey] && params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      Session.where(:Key => params[:SessionKey]).destroy_all
+    end
   end
 
   def about

@@ -26,6 +26,7 @@ Onionstorageapi::Application.routes.draw do
   post '/api/delete_onion' => 'onions#delete_onion'
   post '/api/login' => 'accounts#login'
   post '/api/new_account' => 'accounts#new_account'
+  post '/api/logout' => 'accounts#logout_api'
 
   # Web
   get '/new' => 'accounts#new'

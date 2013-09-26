@@ -10,7 +10,7 @@ class ApiKey < ActiveRecord::Base
 
   def self.is_api_key_active(code)
     @keys = ApiKey.where(:Code => code, :Active => true)
-    @keys.size > 0
+    !@keys.empty?
   end
 
   def self.lock_api_key_for_email(email)

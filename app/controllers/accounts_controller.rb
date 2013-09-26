@@ -147,6 +147,9 @@ class AccountsController < ApplicationController
   def logout_api
     if params[:SessionKey] && params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
       Session.where(:Key => params[:SessionKey]).destroy_all
+      respond_with({:Status => "Success"}.as_json, :location => nil)
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
     end
   end
 

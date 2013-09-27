@@ -203,10 +203,10 @@ class AccountsController < ApplicationController
             Session.where(:HashedUser => encrypted_user).destroy_all
             respond_with({:Status => "Success"}.as_json, :location => nil)
           else
-            respond_with({:error => "User/Pass Mismatch"}.as_json, :location => nil)
+            respond_with({:error => "User/Password Mismatch"}.as_json, :location => nil)
           end
         else
-          respond_with({:error => "User/Pass Mismatch"}.as_json, :location => nil)
+          respond_with({:error => "User/Password Mismatch"}.as_json, :location => nil)
         end
       else
         respond_with({:error => "Unauthorized Access"}.as_json, :location => nil)

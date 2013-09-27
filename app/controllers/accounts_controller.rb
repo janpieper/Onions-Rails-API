@@ -190,6 +190,32 @@ class AccountsController < ApplicationController
     end
   end
 
+  def delete_account_api
+    if params[:SessionKey] && params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      if params[:User] && params[:Pass]
+        # Params are Good
+        encrypted_user = Account.hashed_user(params[:User])
+        if Account.account_exists(encrypted_user)
+          # Account exists for that Username
+          if (Account.pass_is_good(params[:Pass],encrypted_user))
+            Account.where(:HashedUser => encrypted_user).destroy_all
+            Onion.where(:HashedUser => encrypted_user).destroy_all
+            Session.where(:HashedUser => encrypted_user).destroy_all
+            respond_with({:Status => "Success"}.as_json, :location => nil)
+          else
+            respond_with({:error => "User/Password Mismatch"}.as_json, :location => nil)
+          end
+        else
+          respond_with({:error => "User/Password Mismatch"}.as_json, :location => nil)
+        end
+      else
+        respond_with({:error => "Unauthorized Access"}.as_json, :location => nil)
+      end
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+    end
+  end
+
 
   def donate
     @total_accounts = Account.count

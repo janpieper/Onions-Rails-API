@@ -24,7 +24,7 @@ class AccountsController < ApplicationController
 				# Params are GOOD
 				encrypted_user = Account.hashed_user(login[:User])
 				if (Account.account_exists(encrypted_user))
-					# Account exists for that Email
+					# Account exists for that User
 					if (Account.pass_is_good(login[:Pass],encrypted_user))
 						@users = Account.where(:HashedUser => encrypted_user)
 						@user = @users[0]
@@ -59,16 +59,16 @@ class AccountsController < ApplicationController
         # Params are GOOD
         encrypted_user = Account.hashed_user(params[:User])
         if (Account.account_exists(encrypted_user))
-          # Account exists for that Email
+          # Account exists for that User
           if (Account.pass_is_good(params[:Pass],encrypted_user))
             salt = Account.where(:HashedUser => encrypted_user)[0].Salt
             sKey = Session.new_session(encrypted_user)
             respond_with({:SessionKey => sKey, :Salt => salt}.as_json, :location => nil)
           else
-            respond_with({:error => "Email/Password Mismatch"}.as_json, :location => nil)
+            respond_with({:error => "User/Password Mismatch"}.as_json, :location => nil)
           end
         else
-          respond_with({:error => "Email/Password Mismatch"}.as_json, :location => nil)
+          respond_with({:error => "User/Password Mismatch"}.as_json, :location => nil)
         end
       else
         respond_with({:error => "Unauthorized Access"}.as_json, :location => nil)

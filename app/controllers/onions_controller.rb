@@ -82,6 +82,34 @@ class OnionsController < ApplicationController
   # Onions.io API ################
   ################################
 
+  # Get single Onion by ID
+  def get_onion_api
+    if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])
+      if params[:SessionKey] && params[:AESKey]
+        @user_hash = Session.user_hash_for_session(params[:SessionKey])
+        if @user_hash
+          if params[:Id]
+            @onion = Onion.where(:HashedUser => @user_hash, :id => params[:Id]).first!
+            if @onion
+              Onion.decrypted_onion(params[:AESKey], @onion)
+              respond_with({:Onion => @onion, :SessionKey => Session.new_session(@user_hash)}.as_json, :location => nil)
+            else
+              response_with({:error => "Onion not found"}.as_json, :location => nil)
+            end
+          else
+            respond_with({:error => "No Id given"}.as_json, :location => nil)
+          end
+        else
+          respond_with({:error => "No User for Session"}.as_json, :location => nil)
+        end
+      else
+        respond_with({:error => "No Session Key"}.as_json, :location => nil)
+      end
+    else
+      respond_with({:error => "Invalid API Key"}.as_json, :location => nil)
+    end
+  end
+
   # Gets Onions for a SessionKey
 	def get_all_onions_api
     if params[:ApiKey] && ApiKey.is_api_key_active(params[:ApiKey])

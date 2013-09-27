@@ -13,13 +13,14 @@ Onionstorageapi::Application.routes.draw do
 
   resources :sessions
 
-                                              
+
   resources :storages
 
 
   resources :accounts
 
   # API
+  post '/api/get_onion' => 'onions#get_onion_api'
   post '/api/get_all_onions' => 'onions#get_all_onions_api'
   post '/api/add_onion' => 'onions#add_onion_api'
   post '/api/edit_onion' => 'onions#edit_onion_api'

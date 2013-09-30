@@ -63,7 +63,7 @@ class AccountsController < ApplicationController
           if (Account.pass_is_good(params[:Pass],encrypted_user))
             salt = Account.where(:HashedUser => encrypted_user)[0].Salt
             sKey = Session.new_session(encrypted_user)
-            respond_with({:SessionKey => sKey, :Salt => salt}.as_json, :location => nil)
+            respond_with({:Status => "Success", :SessionKey => sKey, :Salt => salt}.as_json, :location => nil)
           else
             respond_with({:error => "User/Password Mismatch"}.as_json, :location => nil)
           end
@@ -92,7 +92,7 @@ class AccountsController < ApplicationController
           salt = Account.generate_salt
           sKey = Session.new_session(encrypted_user)
           @account = Account.create(:HashedUser => encrypted_user, :HashedPass => hashedPass, :Salt => salt)
-          respond_with({:SessionKey => sKey, :Salt => salt}.as_json, :location => "/")
+          respond_with({:Status => "Success", :SessionKey => sKey, :Salt => salt}.as_json, :location => "/")
         end
       else
         # Params are BAD
